@@ -2,7 +2,9 @@ package com.vannak.tech.api_project.domain.model
 
 import java.util.*
 import javax.annotation.processing.Generated
+import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.validation.constraints.Email
 import javax.validation.constraints.Past
@@ -14,7 +16,7 @@ import kotlin.math.min
 class User (id:Int,name:String,dob:Date,phoneNumber: String,email:String){
 
     @Id
-    @Generated
+    @GeneratedValue
     private var id:Int = id
     @Size(min = 2, message = "Size must be 2")
     private var name: String = name
