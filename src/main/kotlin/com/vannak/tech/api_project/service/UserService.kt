@@ -12,11 +12,11 @@ class UserService {
 //    private var users : MutableList<User> = mutableListOf<User>()
 private var users : ArrayList<User> = ArrayList()
     private var userCount:Int=3;
-    init {
-        users.add(User(1, "User 1", Date(), "+85512345678", "test1@gmail.com"))
-        users.add(User(2, "User 2", Date(), "+855962867484", "test2@gmail.com"))
-        users.add(User(3, "User 3", Date(), "+85521212122", "test3@gmail.com"))
-    }
+//    init {
+//        users.add(User(1, "User 1", Date(), "+85512345678", "test1@gmail.com"))
+//        users.add(User(2, "User 2", Date(), "+855962867484", "test2@gmail.com"))
+//        users.add(User(3, "User 3", Date(), "+85521212122", "test3@gmail.com"))
+//    }
 
     fun findAll(): ResponseEntity<Any>{
         return ResponseEntity.ok(users)

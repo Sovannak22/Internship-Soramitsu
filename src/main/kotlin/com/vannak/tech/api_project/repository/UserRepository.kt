@@ -1,6 +1,9 @@
 package com.vannak.tech.api_project.repository
 
+import com.vannak.tech.api_project.domain.model.Role
 import com.vannak.tech.api_project.domain.model.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -8,11 +11,12 @@ import java.util.*
 
 interface UserRepository: JpaRepository<User,Int> {
 
-//    @Query("SELECT u FROM User u WHERE u.name = :name")
-//    fun findByName(@Param("name") name:String):Optional<List<User>>
-
-    @Query("SELECT u FROM User u where u.name LIKE %:query% OR "+
+    @Query("SELECT u FROM User u where (u.name LIKE %:query% OR "+
             "u.email LIKE %:query% OR "+
-            "u.phoneNumber LIKE %:query%")
-    fun findByValue(@Param("query") query : String):Optional<List<User>>
+            "u.phoneNumber LIKE %:query%) AND "+
+            "u.id = :id")
+    fun findByValue(@Param("query") query : String, @Param("id") id: Int):Optional<List<User>>
+
+    @Query("SELECT u FROM User u WHERE u.role = :role")
+    fun findByRoleId(@Param("role") role: Optional<Role>, pageable:Pageable):Page<User>
 }
