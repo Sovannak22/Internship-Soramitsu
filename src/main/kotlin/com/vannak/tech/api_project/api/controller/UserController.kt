@@ -1,6 +1,7 @@
 package com.vannak.tech.api_project.api.controller
 
 import com.vannak.tech.api_project.api.DTO.CreateUserDTO
+import com.vannak.tech.api_project.api.DTO.UpdateUserDTO
 import com.vannak.tech.api_project.api.DTO.UserDTO
 import com.vannak.tech.api_project.api.exception.IDNotFoundException
 import com.vannak.tech.api_project.domain.model.Role
@@ -59,6 +60,11 @@ class UserController(
     @PostMapping
     fun createUsers(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<Any>{
         return ResponseEntity.ok(userService.createUser(userDTO))
+    }
+
+    @PatchMapping("/{id}")
+    fun updateUser(@RequestBody dto: UpdateUserDTO,@PathVariable id:Long): ResponseEntity<Any>{
+        return ResponseEntity.ok(userService.updateUser(id,dto))
     }
 
 

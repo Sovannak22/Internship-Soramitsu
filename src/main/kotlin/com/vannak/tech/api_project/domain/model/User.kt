@@ -1,18 +1,14 @@
 package com.vannak.tech.api_project.domain.model
 
 import com.vannak.tech.api_project.api.DTO.CreateUserDTO
+import com.vannak.tech.api_project.api.DTO.UpdateUserDTO
 import com.vannak.tech.api_project.api.DTO.UserDTO
-import net.minidev.json.annotate.JsonIgnore
-import org.aspectj.lang.annotation.RequiredTypes
 import java.util.*
-import javax.annotation.processing.Generated
 import javax.persistence.*
-import javax.validation.constraints.*
 import kotlin.collections.ArrayList
-import kotlin.math.min
 
 @Entity
-class User(
+data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         var id:Long=0,
@@ -21,7 +17,7 @@ class User(
         var phoneNumber: String,
         var email:String,
         @ManyToOne(fetch = FetchType.LAZY)
-        var role:Role
+        var role: Role?
 ){
 
     fun toDTO(): UserDTO = UserDTO(
@@ -30,11 +26,13 @@ class User(
             email = email,
             phoneNumber = phoneNumber,
             dob = dob.toString(),
-            role = role.id
+            role = role?.id
     )
 
+
+
     companion object{
-        fun fromDTO(dto:CreateUserDTO,role:Role): User{
+        fun fromDTO(dto:CreateUserDTO, role: Role?): User{
             return User(
                     name = dto.name,
                     email = dto.email,
@@ -42,6 +40,18 @@ class User(
                     dob = dto.dob,
                     role = role
             )
+        }
+
+        fun fromDTO(dto: UpdateUserDTO, role: Role?, oriUser: User): User{
+            var user = User(
+                    id = oriUser.id,
+                    name = dto.name ?: oriUser.name,
+                    phoneNumber = dto.phoneNumber?:oriUser.phoneNumber,
+                    dob = dto.dob?:oriUser.dob,
+                    role = role?:oriUser.role,
+                    email = dto.email?:oriUser.email
+            )
+            return user
         }
 
         fun toListDTO(users:List<User>):List<UserDTO>{
