@@ -13,7 +13,7 @@ data class UserDTO (
         var role:Long
 )
 
-data class createUserDTO(
+data class CreateUserDTO(
         @field:Email
         @field:NotEmpty
         var email:String,
