@@ -8,13 +8,19 @@ import javax.persistence.*
 import kotlin.collections.ArrayList
 
 @Entity
+@Table(name = "users")
 data class User(
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.TABLE)
+        @Column(name="id")
         var id:Long=0,
+        @Column(name = "name")
         var name:String,
+        @Column(name = "dob")
         var dob:Date,
+        @Column(name = "phone_number")
         var phoneNumber: String,
+        @Column(name = "email")
         var email:String,
         @ManyToOne(fetch = FetchType.LAZY)
         var role: Role?
@@ -43,7 +49,7 @@ data class User(
         }
 
         fun fromDTO(dto: UpdateUserDTO, role: Role?, oriUser: User): User{
-            var user = User(
+            return User(
                     id = oriUser.id,
                     name = dto.name ?: oriUser.name,
                     phoneNumber = dto.phoneNumber?:oriUser.phoneNumber,
@@ -51,7 +57,6 @@ data class User(
                     role = role?:oriUser.role,
                     email = dto.email?:oriUser.email
             )
-            return user
         }
 
         fun toListDTO(users:List<User>):List<UserDTO>{
