@@ -14,20 +14,16 @@ class User (id:Int,name:String,dob:Date,phoneNumber: String,email:String,role:Ro
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private var id = id
-    @Size(min = 2, message = "Size must be 2")
+
     private var name = name
-    @Past
+
     private var dob = dob
 
-    @Pattern(regexp = "\\+855[0-9]{8}[0-9]?",message = "Phone number format is invalid")
     private var phoneNumber=phoneNumber;
 
-    @Email
     private var email = email
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     private var role=role
 
 
