@@ -8,6 +8,7 @@ import java.util.*
 import javax.annotation.processing.Generated
 import javax.persistence.*
 import javax.validation.constraints.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
 @Entity
@@ -22,6 +23,7 @@ class User(
         @ManyToOne(fetch = FetchType.LAZY)
         var role:Role
 ){
+
     fun toDTO(): UserDTO = UserDTO(
             id = id,
             name = name,
@@ -40,6 +42,14 @@ class User(
                     dob = dto.dob,
                     role = role
             )
+        }
+
+        fun toListDTO(users:List<User>):List<UserDTO>{
+            var usersDTO = ArrayList<UserDTO>()
+            for (user in users){
+                usersDTO.add(user.toDTO())
+            }
+            return usersDTO
         }
     }
 

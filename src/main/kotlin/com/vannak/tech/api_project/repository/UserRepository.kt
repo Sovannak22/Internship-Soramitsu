@@ -17,6 +17,10 @@ interface UserRepository: JpaRepository<User,Int> {
             "u.id = :id")
     fun findByValue(@Param("query") query : String, @Param("id") id: Int):Optional<List<User>>
 
+    fun findById(id:Long):User
+
+    fun deleteById(id:Long):User
+
     @Query("SELECT u FROM User u WHERE u.role = :role")
     fun findByRoleId(@Param("role") role: Optional<Role>, pageable:Pageable):Page<User>
 }

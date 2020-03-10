@@ -20,9 +20,9 @@ class RoleController(@Autowired var roleRepository: RoleRepository) {
         return ResponseEntity.ok(role)
     }
 
-    @GetMapping("/{id}/users")
-    fun getUsers(@PathVariable id:Int):List<User>{
-        var role = roleRepository.findById(id)
-        return role.get().getUsers()
-    }
+//    @GetMapping("/{id}/users")
+//    fun getUsers(@PathVariable id:Int):List<User>{
+//        var role = roleRepository.findById(id)
+//        return role.get().getUsers()
+//    }
 }

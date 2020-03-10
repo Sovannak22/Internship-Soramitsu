@@ -22,7 +22,7 @@ data class CreateUserDTO(
         @field:Pattern(regexp = "\\+855[0-9]{8}[0-9]?",message = "Phone number format is invalid")
         var phoneNumber: String,
 
-        @field:NotEmpty
+        @field:NotNull
         @field:Past
         var dob:Date,
 
@@ -30,6 +30,6 @@ data class CreateUserDTO(
         @field:Size(min=2)
         var name: String,
 
-        @field:NotEmpty
+        @field:NotNull
         var role: Long
 )
