@@ -58,14 +58,6 @@ data class User(
                     email = dto.email?:oriUser.email
             )
         }
-
-        fun toListDTO(users:List<User>):List<UserDTO>{
-            var usersDTO = ArrayList<UserDTO>()
-            for (user in users){
-                usersDTO.add(user.toDTO())
-            }
-            return usersDTO
-        }
     }
 
 }
