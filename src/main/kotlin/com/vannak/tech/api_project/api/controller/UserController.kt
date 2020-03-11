@@ -49,19 +49,19 @@ class UserController(
 
 
     @PostMapping
-    fun createUsers(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<UserDTO>{
-        return userService.createUser(userDTO)
+    fun createUsers(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<Any>{
+        return ResponseEntity.ok(userService.createUser(userDTO))
     }
 
     @PatchMapping("/{id}")
-    fun updateUser(@RequestBody dto: UpdateUserDTO,@PathVariable id:Long): ResponseEntity<UserDTO>{
-        return userService.updateUser(id,dto)
+    fun updateUser(@RequestBody dto: UpdateUserDTO,@PathVariable id:Long): ResponseEntity<Any>{
+        return ResponseEntity.ok(userService.updateUser(id,dto))
     }
 
 
     @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id:Long): ResponseEntity<UserDTO>{
-        return userService.deleteUser(id)
+    fun deleteUser(@PathVariable id:Long): ResponseEntity<Any>{
+        return ResponseEntity.ok(userService.deleteUser(id))
     }
 
 
