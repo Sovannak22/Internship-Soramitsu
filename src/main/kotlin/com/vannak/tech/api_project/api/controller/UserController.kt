@@ -9,7 +9,6 @@ import com.vannak.tech.api_project.domain.model.User
 import com.vannak.tech.api_project.repository.RoleRepository
 import com.vannak.tech.api_project.repository.UserRepository
 import com.vannak.tech.api_project.services.UserService
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -23,15 +22,13 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/users")
 class UserController(
-        @Autowired var userService: UserService,
-        @Autowired var userRepository:UserRepository,
-        @Autowired var roleRepository: RoleRepository
+        @Autowired var userService: UserService
 ) {
     lateinit var pageable: Pageable
 
     @GetMapping
-    fun retrieveAllUsers():ResponseEntity<List<UserDTO>>{
-        return userService.retrieveAllUser()
+    fun retrieveAllUsers(@RequestParam page:Int=0):ResponseEntity<Page<UserDTO>>{
+        return userService.retrieveAllUser(page)
     }
 
     @GetMapping("/{id}")
@@ -40,38 +37,31 @@ class UserController(
     }
 
     //Find user by Role
-//    @GetMapping("/role/{id}")
-//    fun findByRole(@PathVariable id:Int,@RequestParam page:Int=0): ResponseEntity<Page<User>> {
-//        var role = roleRepository.findById(id)
-//        pageable = PageRequest.of(page,5)
-//        if (role == Optional.empty<Role>())
-//            throw IDNotFoundException("can not find role $id")
-//        var users = userRepository.findByRoleId(role,pageable)
-//        return ResponseEntity.ok(users)
-//    }
+    @GetMapping("/role/{id}")
+    fun findByRole(@PathVariable id:Long,@RequestParam page:Int): ResponseEntity<Page<UserDTO>> {
+        return userService.findByRole(id,page)
+    }
 
-//    @GetMapping("/search")
-//    fun findByValue(@RequestParam(name = "value") value:String, @RequestParam id:Int): ResponseEntity<Optional<List<User>>>{
-//        val user = userRepository.findByValue(value,id)
-//        return ResponseEntity.ok(user)
-//    }
+    @GetMapping("/search")
+    fun findByValue(@RequestParam(name = "value") value:String, @RequestParam id:Long,@RequestParam page: Int): ResponseEntity<Page<UserDTO>> {
+        return userService.findByValue(value,id,page)
+    }
 
 
     @PostMapping
-    fun createUsers(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<Any>{
-        return ResponseEntity.ok(userService.createUser(userDTO))
+    fun createUsers(@Valid @RequestBody userDTO: CreateUserDTO): ResponseEntity<UserDTO>{
+        return userService.createUser(userDTO)
     }
 
     @PatchMapping("/{id}")
-    fun updateUser(@RequestBody dto: UpdateUserDTO,@PathVariable id:Long): ResponseEntity<Any>{
-        return ResponseEntity.ok(userService.updateUser(id,dto))
+    fun updateUser(@RequestBody dto: UpdateUserDTO,@PathVariable id:Long): ResponseEntity<UserDTO>{
+        return userService.updateUser(id,dto)
     }
 
 
     @DeleteMapping("/{id}")
-    fun deleteUser(@PathVariable id:Long): ResponseEntity<Any>{
-        var user = userService.deleteUser(id)
-        return ResponseEntity.ok(user)
+    fun deleteUser(@PathVariable id:Long): ResponseEntity<UserDTO>{
+        return userService.deleteUser(id)
     }
 
 

@@ -1,6 +1,5 @@
 package com.vannak.tech.api_project.domain.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 
 @Entity

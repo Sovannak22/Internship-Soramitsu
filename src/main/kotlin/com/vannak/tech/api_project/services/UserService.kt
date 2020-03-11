@@ -7,6 +7,9 @@ import com.vannak.tech.api_project.domain.model.User
 import com.vannak.tech.api_project.repository.RoleRepository
 import com.vannak.tech.api_project.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import javax.validation.Valid
@@ -18,9 +21,13 @@ class UserService (
         @Autowired
         var roleRepository: RoleRepository
 ){
+    lateinit var pageable: Pageable
 
-    fun retrieveAllUser():ResponseEntity<List<UserDTO>>{
-        return ResponseEntity.ok(User.toListDTO(userRepository.findAll()))
+    fun retrieveAllUser(page: Int):ResponseEntity<Page<UserDTO>>{
+        pageable = PageRequest.of(page,5)
+        return ResponseEntity.ok(userRepository.findAll(pageable).map {
+            it.toDTO()
+        })
     }
 
     fun findUserById(id:Long):ResponseEntity<UserDTO>{
@@ -44,6 +51,26 @@ class UserService (
         val role = roleRepository.findById(dto.role)
         val savedUser = userRepository.save(User.fromDTO(dto,role,user))
         return ResponseEntity.ok(savedUser.toDTO())
+    }
+
+    fun findByRole(id:Long,page:Int):ResponseEntity<Page<UserDTO>>{
+        pageable = PageRequest.of(page,5)
+        val users = userRepository.findByRoleId(id,pageable)
+        return  ResponseEntity.ok(
+                users.map {
+                    it.toDTO()
+                }
+        )
+    }
+
+    fun findByValue(query:String,id: Long,page: Int):ResponseEntity<Page<UserDTO>>{
+        pageable = PageRequest.of(page,5)
+        val users = userRepository.findByValue(query,id,pageable)
+        return ResponseEntity.ok(
+                users.map {
+                    it.toDTO()
+                }
+        )
     }
 
 }
