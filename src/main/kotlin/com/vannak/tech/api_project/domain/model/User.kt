@@ -3,6 +3,9 @@ package com.vannak.tech.api_project.domain.model
 import com.vannak.tech.api_project.api.DTO.CreateUserDTO
 import com.vannak.tech.api_project.api.DTO.UpdateUserDTO
 import com.vannak.tech.api_project.api.DTO.UserDTO
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -22,12 +25,15 @@ data class User(
         @Column(name = "email")
         var email:String,
         @Column(name = "created_at")
-        var createdAt:Date,
+        @CreationTimestamp
+        var createdAt: LocalDateTime = LocalDateTime.now(),
         @Column(name = "updated_at")
-        var updatedAt:Date,
-        @ManyToOne(fetch = FetchType.LAZY)
-        var role:Role?
+        @UpdateTimestamp
+        var updatedAt:LocalDateTime = LocalDateTime.now()
 ){
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    lateinit var role:Role
 
     fun toDTO(): UserDTO = UserDTO(
             id = id,
@@ -35,7 +41,7 @@ data class User(
             email = email,
             phoneNumber = phoneNumber,
             dob = dob.toString(),
-            role = role?.id,
+            role = role.id,
             createdAt = createdAt.toString(),
             updatedAt = updatedAt.toString()
     )
@@ -44,28 +50,28 @@ data class User(
 
     companion object{
         fun fromDTO(dto:CreateUserDTO, role: Role?): User{
-            return User(
+            var user = User(
                     name = dto.name,
                     email = dto.email,
                     phoneNumber = dto.email,
-                    dob = dto.dob,
-                    role = role,
-                    createdAt = Date(),
-                    updatedAt = Date()
+                    dob = dto.dob
             )
+            user.role = Role(1,"Admin")
+            return user
+
         }
 
         fun fromDTO(dto: UpdateUserDTO, role: Role?, oriUser: User): User{
-            return User(
+            var user = User(
                     id = oriUser.id,
                     name = dto.name ?: oriUser.name,
                     phoneNumber = dto.phoneNumber?:oriUser.phoneNumber,
-                    dob = dto.dob?:oriUser.dob,
-                    role = role?:oriUser.role,
-                    email = dto.email?:oriUser.email,
-                    createdAt = oriUser.createdAt,
-                    updatedAt = Date()
+                    dob = dto.dob ?: oriUser.dob,
+                    email = dto.email ?: oriUser.email,
+                    createdAt = oriUser.createdAt
             )
+            user.role = role ?: oriUser.role
+            return user
         }
     }
 
