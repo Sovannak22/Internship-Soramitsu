@@ -5,7 +5,6 @@ import com.vannak.tech.api_project.api.DTO.UpdateUserDTO
 import com.vannak.tech.api_project.api.DTO.UserDTO
 import java.util.*
 import javax.persistence.*
-import kotlin.collections.ArrayList
 
 @Entity
 @Table(name = "users")
@@ -22,8 +21,12 @@ data class User(
         var phoneNumber: String,
         @Column(name = "email")
         var email:String,
+        @Column(name = "created_at")
+        var createdAt:Date,
+        @Column(name = "updated_at")
+        var updatedAt:Date,
         @ManyToOne(fetch = FetchType.LAZY)
-        var role: Role?
+        var role:Role?
 ){
 
     fun toDTO(): UserDTO = UserDTO(
@@ -32,7 +35,9 @@ data class User(
             email = email,
             phoneNumber = phoneNumber,
             dob = dob.toString(),
-            role = role?.id
+            role = role?.id,
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
     )
 
 
@@ -44,7 +49,9 @@ data class User(
                     email = dto.email,
                     phoneNumber = dto.email,
                     dob = dto.dob,
-                    role = role
+                    role = role,
+                    createdAt = Date(),
+                    updatedAt = Date()
             )
         }
 
@@ -55,7 +62,9 @@ data class User(
                     phoneNumber = dto.phoneNumber?:oriUser.phoneNumber,
                     dob = dto.dob?:oriUser.dob,
                     role = role?:oriUser.role,
-                    email = dto.email?:oriUser.email
+                    email = dto.email?:oriUser.email,
+                    createdAt = oriUser.createdAt,
+                    updatedAt = Date()
             )
         }
     }

@@ -9,7 +9,9 @@ data class UserDTO(
         var phoneNumber:String,
         var dob:String,
         var name:String,
-        var role: Long?
+        var role: Long?,
+        var createdAt:String,
+        var updatedAt:String
 )
 
 data class CreateUserDTO(

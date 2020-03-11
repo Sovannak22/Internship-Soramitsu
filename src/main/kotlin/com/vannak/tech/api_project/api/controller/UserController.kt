@@ -27,24 +27,24 @@ class UserController(
     lateinit var pageable: Pageable
 
     @GetMapping
-    fun retrieveAllUsers(@RequestParam page:Int=0):ResponseEntity<Page<UserDTO>>{
-        return userService.retrieveAllUser(page)
+    fun retrieveAllUsers(@RequestParam(defaultValue = "0") page:Int=0):ResponseEntity<Any>{
+        return ResponseEntity.ok(userService.retrieveAllUser(page))
     }
 
     @GetMapping("/{id}")
-    fun findUserById(@PathVariable id:Long): ResponseEntity<UserDTO> {
-        return userService.findUserById(id)
+    fun findUserById(@PathVariable id:Long): ResponseEntity<Any> {
+        return ResponseEntity.ok(userService.findUserById(id))
     }
 
     //Find user by Role
     @GetMapping("/role/{id}")
-    fun findByRole(@PathVariable id:Long,@RequestParam page:Int): ResponseEntity<Page<UserDTO>> {
-        return userService.findByRole(id,page)
+    fun findByRole(@PathVariable id:Long,@RequestParam(defaultValue = "0") page:Int): ResponseEntity<Any> {
+        return ResponseEntity.ok(userService.findByRole(id,page))
     }
 
     @GetMapping("/search")
-    fun findByValue(@RequestParam(name = "value") value:String, @RequestParam id:Long,@RequestParam page: Int): ResponseEntity<Page<UserDTO>> {
-        return userService.findByValue(value,id,page)
+    fun findByValue(@RequestParam(name = "value") value:String, @RequestParam id:Long,@RequestParam page: Int): ResponseEntity<Any> {
+        return ResponseEntity.ok(userService.findByValue(value,id,page))
     }
 
 
