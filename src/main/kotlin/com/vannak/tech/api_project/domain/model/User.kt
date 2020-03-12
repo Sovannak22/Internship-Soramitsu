@@ -1,58 +1,78 @@
 package com.vannak.tech.api_project.domain.model
 
-import net.minidev.json.annotate.JsonIgnore
-import org.aspectj.lang.annotation.RequiredTypes
+import com.vannak.tech.api_project.api.DTO.CreateUserDTO
+import com.vannak.tech.api_project.api.DTO.UpdateUserDTO
+import com.vannak.tech.api_project.api.DTO.UserDTO
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import java.util.*
-import javax.annotation.processing.Generated
 import javax.persistence.*
-import javax.validation.constraints.*
-import kotlin.math.min
 
 @Entity
-class User (id:Int,name:String,dob:Date,phoneNumber: String,email:String,role:Role){
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private var id = id
-    @Size(min = 2, message = "Size must be 2")
-    private var name = name
-    @Past
-    private var dob = dob
-
-    @Pattern(regexp = "\\+855[0-9]{8}[0-9]?",message = "Phone number format is invalid")
-    private var phoneNumber=phoneNumber;
-
-    @Email
-    private var email = email
-
-    @NotNull
+@Table(name = "users")
+data class User(
+        @Id
+        @GeneratedValue(strategy = GenerationType.TABLE)
+        @Column(name="id")
+        var id:Long=0,
+        @Column(name = "name")
+        var name:String,
+        @Column(name = "dob")
+        var dob:Date,
+        @Column(name = "phone_number")
+        var phoneNumber: String,
+        @Column(name = "email")
+        var email:String,
+        @Column(name = "created_at")
+        @CreationTimestamp
+        var createdAt: LocalDateTime = LocalDateTime.now(),
+        @Column(name = "updated_at")
+        @UpdateTimestamp
+        var updatedAt:LocalDateTime = LocalDateTime.now()
+){
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    private var role=role
+    @JoinColumn(name = "role_id")
+    lateinit var role:Role
+
+    fun toDTO(): UserDTO = UserDTO(
+            id = id,
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            dob = dob.toString(),
+            role = role.id,
+            createdAt = createdAt.toString(),
+            updatedAt = updatedAt.toString()
+    )
 
 
-    fun getId():Int{
-        return this.id;
-    }
-    fun getName(): String{
-        return this.name;
-    }
-    fun getDob(): Date{
-        return this.dob;
-    }
-    fun getPhoneNumber(): String{
-        return this.phoneNumber
-    }
-    fun getEmail():String{
-        return this.email
-    }
-    fun getRole():Role{
-        return this.role
-    }
 
-    fun setId(id:Int): Unit{
-        this.id=id;
-    }
+    companion object{
+        fun fromDTO(dto:CreateUserDTO, role: Role?): User{
+            var user = User(
+                    name = dto.name,
+                    email = dto.email,
+                    phoneNumber = dto.email,
+                    dob = dto.dob
+            )
+            user.role = Role(1,"Admin")
+            return user
 
+        }
+
+        fun fromDTO(dto: UpdateUserDTO, role: Role?, oriUser: User): User{
+            var user = User(
+                    id = oriUser.id,
+                    name = dto.name ?: oriUser.name,
+                    phoneNumber = dto.phoneNumber?:oriUser.phoneNumber,
+                    dob = dto.dob ?: oriUser.dob,
+                    email = dto.email ?: oriUser.email,
+                    createdAt = oriUser.createdAt
+            )
+            user.role = role ?: oriUser.role
+            return user
+        }
+    }
 
 }
